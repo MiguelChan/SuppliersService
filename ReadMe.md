@@ -18,6 +18,16 @@ before deploying the code. In order to do so follow the next steps:
 * `docker build --rm -t mgl/suppliers-service .`: This will create your image and wait for you to run it.
 * `docker run --rm -t -d mgl/suppliers-service bash`: This will run the actual image in your container and run it.
 
+# Building the Test Database
+
+In order to create a `devo` database follow the steps below:
+
+* `docker run --name custom-db -p 5432:5432 -e POSTGRES_PASSWORD=docker -d postgres:12
+  .`: Which will run an empty Database using `PostgreSLQ`, and will expose the port `5432`.
+* Log into your favorite SQL Workbench using `postgres` and `docker` as username and passwords respectively.
+* Run the commands located unser `src/main/resources/db/schema/initial-setup.sql`
+* Finally run: `.gradlew flywayMigrate` so your database is up-to-date.
+
 ### Troubleshooting
 
 * Sometimes when trying to build your Docker image you will find some errors, and you will need to log into the
