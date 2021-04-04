@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'checkstyle'
+    id 'org.flywaydb.flyway' version '7.7.2'
 }
 
 group = 'com.mgl'
@@ -21,9 +22,19 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.projectlombok:lombok:1.18.20'
 
+    runtimeOnly 'org.postgresql:postgresql:42.2.19'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/postgres'
+    user = 'flyway_user'
+    password = 'flyway-user-password'
+    schemas = ['suppliersdb']
 }
 
 checkstyle {
