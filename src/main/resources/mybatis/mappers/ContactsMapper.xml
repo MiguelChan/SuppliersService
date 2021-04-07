@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mgl.suppliersservice.dao.mappers.ContactsMapper">
+    <resultMap id="Contact" type="com.mgl.suppliersservice.dao.entities.ContactEntity">
+        <id property="id" column="id" />
+        <result property="contactType" javaType="string" column="contact_type" />
+        <result property="phoneNumber" javaType="string" column="phone_number" />
+        <result property="emailAddress" javaType="string" column="email_address" />
+        <result property="contactFirstName" javaType="string" column="contact_first_name" />
+        <result property="contactLastName" javaType="string" column="contact_last_name" />
+    </resultMap>
+
+    <select id="getContacts" resultMap="Contact">
+        select
+            c.*
+        from suppliersdb.contacts as c
+        inner join suppliersdb.suppliers_to_contacts stc
+        on
+            c.id = stc.contact_id
+        where
+            stc.supplier_id = #{supplierId}
+    </select>
+</mapper>
