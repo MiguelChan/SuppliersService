@@ -17,4 +17,12 @@ public interface ContactsDao {
      */
     List<ContactEntity> getContactsForSupplier(String supplierId);
 
+    /**
+     * Inserts a List of {@link ContactEntity}.
+     *
+     * @param contactEntities .
+     *
+     */
+    void insertContacts(List<ContactEntity> contactEntities);
+
 }

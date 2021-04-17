@@ -2,11 +2,15 @@ package com.mgl.suppliersservice.models.mappers;
 
 import com.mgl.suppliersservice.dao.entities.SupplierEntity;
 import com.mgl.suppliersservice.models.Supplier;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 /**
  * .
  */
-public class SuppliersMapper {
+@Component
+@NoArgsConstructor
+public class SuppliersEntityMapper {
 
     /**
      * .
@@ -22,6 +26,24 @@ public class SuppliersMapper {
             .lineAddress2(supplierEntity.getAddressLine2())
             .name(supplierEntity.getName())
             .phoneNumber(supplierEntity.getPhoneNumber())
+            .build();
+    }
+
+    /**
+     * .
+     *
+     * @param supplier .
+     *
+     * @return .
+     *
+     */
+    public SupplierEntity fromModel(Supplier supplier) {
+        return SupplierEntity.builder()
+            .id(supplier.getId())
+            .name(supplier.getName())
+            .phoneNumber(supplier.getPhoneNumber())
+            .addressLine1(supplier.getLineAddress1())
+            .addressLine2(supplier.getLineAddress1())
             .build();
     }
 

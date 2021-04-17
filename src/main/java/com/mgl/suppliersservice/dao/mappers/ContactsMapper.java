@@ -19,4 +19,12 @@ public interface ContactsMapper {
      */
     List<ContactEntity> getContacts(String supplierId);
 
+    /**
+     * Inserts a List of {@link ContactEntity}.
+     *
+     * @param contactEntities .
+     *
+     */
+    void insertContacts(List<ContactEntity> contactEntities);
+
 }

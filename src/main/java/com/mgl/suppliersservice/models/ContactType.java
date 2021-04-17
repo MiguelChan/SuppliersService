@@ -5,7 +5,30 @@ package com.mgl.suppliersservice.models;
  */
 public enum ContactType {
 
-    SalesRep,
-    Returns
+    SALES_REP("SALES_REP"),
+    RETURNS("RETURNS");
+
+    /**
+     * .
+     */
+    private String type;
+
+    /**
+     * .
+     *
+     * @param type .
+     */
+    ContactType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * .
+     *
+     * @return .
+     */
+    public String getType() {
+        return this.type;
+    }
 
 }

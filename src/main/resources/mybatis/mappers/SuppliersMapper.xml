@@ -12,14 +12,36 @@
     </resultMap>
 
     <select id="getSuppliers" resultMap="Supplier">
-        select
+        SELECT
             s.id,
             s.name,
             s.address_line_1,
             s.address_line_2,
             s.phone_number
-        from suppliersdb.suppliers s
-        order by s.id
-        limit ALL offset #{pageSize * pageNumber}
+        FROM suppliersdb.suppliers s
+        ORDER BY s.id
+        LIMIT #{pageSize} OFFSET #{offset}
     </select>
+
+    <select id="getSuppliersCount" resultType="int">
+        SELECT
+            count(*)
+        FROM suppliersdb.suppliers;
+    </select>
+
+    <insert id="insertSupplier" parameterType="com.mgl.suppliersservice.dao.entities.SupplierEntity">
+        INSERT INTO suppliersdb.suppliers (
+            id,
+            name,
+            address_line_1,
+            address_line_2,
+            phone_number
+        ) VALUES (
+            #{id},
+            #{name},
+            #{addressLine1},
+            #{addressLine2},
+            #{phoneNumber}
+        )
+    </insert>
 </mapper>

@@ -2,7 +2,7 @@ package com.mgl.suppliersservice.controllers;
 
 import com.mgl.suppliersservice.dao.ContactsDao;
 import com.mgl.suppliersservice.models.Contact;
-import com.mgl.suppliersservice.models.mappers.ContactsMapper;
+import com.mgl.suppliersservice.models.mappers.ContactsEntityMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
@@ -21,19 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContactsController {
 
     private final ContactsDao contactsDao;
-    private final ContactsMapper contactsMapper;
+    private final ContactsEntityMapper contactsEntityMapper;
 
     /**
      * .
      *
      * @param contactsDao .
-     * @param contactsMapper .
+     * @param contactsEntityMapper .
      *
      */
     @Autowired
-    public ContactsController(ContactsDao contactsDao, ContactsMapper contactsMapper) {
+    public ContactsController(ContactsDao contactsDao, ContactsEntityMapper contactsEntityMapper) {
         this.contactsDao = contactsDao;
-        this.contactsMapper = contactsMapper;
+        this.contactsEntityMapper = contactsEntityMapper;
     }
 
     /**
@@ -49,7 +49,7 @@ public class ContactsController {
         try {
             return contactsDao.getContactsForSupplier(supplierId)
                 .stream()
-                .map(contactsMapper::fromEntity)
+                .map(contactsEntityMapper::fromEntity)
                 .collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Exception Found when trying to fetch Suppliers.", e);
