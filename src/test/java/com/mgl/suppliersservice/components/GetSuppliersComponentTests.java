@@ -11,8 +11,9 @@ import com.mgl.suppliersservice.dao.entities.ContactEntity;
 import com.mgl.suppliersservice.dao.entities.SupplierEntity;
 import com.mgl.suppliersservice.models.Contact;
 import com.mgl.suppliersservice.models.Supplier;
-import com.mgl.suppliersservice.models.mappers.ContactsMapper;
-import com.mgl.suppliersservice.models.mappers.SuppliersMapper;
+import com.mgl.suppliersservice.models.Tuple;
+import com.mgl.suppliersservice.models.mappers.ContactsEntityMapper;
+import com.mgl.suppliersservice.models.mappers.SuppliersEntityMapper;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import java.util.List;
 import org.assertj.core.util.Lists;
@@ -33,26 +34,29 @@ public class GetSuppliersComponentTests {
     @Mock
     private SuppliersDao suppliersDao;
     @Mock
-    private ContactsMapper contactsMapper;
+    private ContactsEntityMapper contactsEntityMapper;
     @Mock
-    private SuppliersMapper suppliersMapper;
+    private SuppliersEntityMapper suppliersEntityMapper;
 
     private GetSuppliersComponent getSuppliersComponent;
 
     @BeforeEach
     public void setup() {
-        getSuppliersComponent = new GetSuppliersComponent(contactsDao, suppliersDao, suppliersMapper, contactsMapper);
+        getSuppliersComponent = new GetSuppliersComponent(contactsDao, suppliersDao,
+            suppliersEntityMapper, contactsEntityMapper);
     }
 
     @Test
-    public void getSuppliers_should_returnTheSuppliers() {
+    public void getSuppliers_should_returnTheSuppliers() throws Exception {
         int expectedPageSize = 100;
         int expectedPageNumber = 10;
+        int expectedSuppliersCount = 1000;
 
         SupplierEntity supplierEntity = EnhancedRandom.random(SupplierEntity.class);
         ContactEntity contactEntity = EnhancedRandom.random(ContactEntity.class);
 
         when(suppliersDao.getSuppliers(expectedPageSize, expectedPageNumber)).thenReturn((Lists.newArrayList(supplierEntity)));
+        when(suppliersDao.getSuppliersCount()).thenReturn(expectedSuppliersCount);
         when(contactsDao.getContactsForSupplier(supplierEntity.getId())).thenReturn(Lists.newArrayList(contactEntity));
 
         Contact contact = EnhancedRandom.random(Contact.class);
@@ -62,18 +66,24 @@ public class GetSuppliersComponentTests {
             .contacts(Lists.newArrayList(contact))
             .build();
 
-        when(contactsMapper.fromEntity(contactEntity)).thenReturn(contact);
-        when(suppliersMapper.fromEntity(supplierEntity)).thenReturn(supplier);
+        when(contactsEntityMapper.fromEntity(contactEntity)).thenReturn(contact);
+        when(suppliersEntityMapper.fromEntity(supplierEntity)).thenReturn(supplier);
 
-        List<Supplier> suppliers = getSuppliersComponent.getSuppliers(expectedPageSize, expectedPageNumber);
+        Tuple<Integer, List<Supplier>> getSuppliersResponse =
+            getSuppliersComponent.getSuppliers(expectedPageSize, expectedPageNumber);
 
         verify(suppliersDao).getSuppliers(expectedPageSize, expectedPageNumber);
+
+        List<Supplier> suppliers = getSuppliersResponse.getRightValue();
         assertThat(suppliers.size()).isEqualTo(1);
         assertThat(suppliers.get(0)).isEqualTo(expectedSupplier);
+
+        int totalCount = getSuppliersResponse.getLeftValue();
+        assertThat(totalCount).isEqualTo(expectedSuppliersCount);
     }
 
     @Test
-    public void getSuppliers_should_bubbleUpException_when_daoFails() {
+    public void getSuppliers_should_bubbleUpException_when_daoFails() throws Exception {
         int expectedPageSize = 5;
         int expectedPageNumber = 1;
         when(suppliersDao.getSuppliers(expectedPageSize, expectedPageNumber)).thenThrow(RuntimeException.class);

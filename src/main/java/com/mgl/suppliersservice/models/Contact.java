@@ -7,7 +7,7 @@ import lombok.Data;
  * Defines a Contact.
  */
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class Contact {
 
     private final String id;

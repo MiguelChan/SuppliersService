@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import com.mgl.suppliersservice.dao.ContactsDao;
 import com.mgl.suppliersservice.dao.entities.ContactEntity;
 import com.mgl.suppliersservice.models.Contact;
-import com.mgl.suppliersservice.models.mappers.ContactsMapper;
+import com.mgl.suppliersservice.models.mappers.ContactsEntityMapper;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,13 +31,13 @@ public class ContactsControllerTests {
     private ContactsDao contactsDao;
 
     @Mock
-    private ContactsMapper contactsMapper;
+    private ContactsEntityMapper contactsEntityMapper;
 
     private ContactsController contactsController;
 
     @BeforeEach
     public void setup() {
-        contactsController = new ContactsController(contactsDao, contactsMapper);
+        contactsController = new ContactsController(contactsDao, contactsEntityMapper);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class ContactsControllerTests {
         List<ContactEntity> dbContacts = EnhancedRandom.randomListOf(5, ContactEntity.class);
 
         when(contactsDao.getContactsForSupplier(TEST_SUPPLIER_ID)).thenReturn(dbContacts);
-        when(contactsMapper.fromEntity(any())).thenReturn(any());
+        when(contactsEntityMapper.fromEntity(any())).thenReturn(any());
 
         List<Contact> contacts = contactsController.getContacts(TEST_SUPPLIER_ID);
 
@@ -53,7 +53,7 @@ public class ContactsControllerTests {
         verify(contactsDao).getContactsForSupplier(TEST_SUPPLIER_ID);
 
         dbContacts.forEach(currentContact -> {
-            verify(contactsMapper).fromEntity(currentContact);
+            verify(contactsEntityMapper).fromEntity(currentContact);
         });
     }
 
@@ -64,7 +64,7 @@ public class ContactsControllerTests {
         assertThatThrownBy(() -> contactsController.getContacts(TEST_SUPPLIER_ID)).isInstanceOfAny(RuntimeException.class);
 
         verify(contactsDao).getContactsForSupplier((TEST_SUPPLIER_ID));
-        verifyNoInteractions(contactsMapper);
+        verifyNoInteractions(contactsEntityMapper);
     }
 
 }

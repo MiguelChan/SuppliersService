@@ -10,16 +10,36 @@
         <result property="emailAddress" javaType="string" column="email_address" />
         <result property="contactFirstName" javaType="string" column="contact_first_name" />
         <result property="contactLastName" javaType="string" column="contact_last_name" />
+        <result property="supplierId" javaType="string" column="supplier_id" />
     </resultMap>
 
     <select id="getContacts" resultMap="Contact">
-        select
-            c.*
-        from suppliersdb.contacts as c
-        inner join suppliersdb.suppliers_to_contacts stc
-        on
-            c.id = stc.contact_id
-        where
-            stc.supplier_id = #{supplierId}
+        SELECT
+            *
+        FROM suppliersdb.contacts AS c
+        WHERE
+            c.supplier_id = #{supplierId}
     </select>
+
+    <insert id="insertContacts" parameterType="java.util.List">
+        INSERT INTO suppliersdb.contacts (
+            id,
+            contact_type,
+            phone_number,
+            email_address,
+            contact_first_name,
+            contact_last_name,
+            supplier_id
+        )
+        VALUES
+        <foreach collection="list" item="current" open="(" separator="),(" close=");">
+            #{current.id},
+            #{current.contactType},
+            #{current.phoneNumber},
+            #{current.emailAddress},
+            #{current.contactFirstName},
+            #{current.contactLastName},
+            #{current.supplierId}
+        </foreach>
+    </insert>
 </mapper>

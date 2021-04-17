@@ -16,6 +16,24 @@ public interface SuppliersDao {
      *
      * @return .
      */
-    List<SupplierEntity> getSuppliers(int pageSize, int pageNumber);
+    List<SupplierEntity> getSuppliers(int pageSize, int pageNumber) throws Exception;
+
+    /**
+     * Gets the count of all the Suppliers in the DB.
+     *
+     * @return .
+     *
+     * @throws Exception .
+     */
+    int getSuppliersCount() throws Exception;
+
+    /**
+     * Creates the supplier in the Database.
+     *
+     * @param supplierEntity The supplier to create.
+     *
+     * @return The ID of the new Supplier.
+     */
+    String createSupplier(SupplierEntity supplierEntity) throws Exception;
 
 }

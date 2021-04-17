@@ -6,8 +6,9 @@ import com.mgl.suppliersservice.dao.entities.ContactEntity;
 import com.mgl.suppliersservice.dao.entities.SupplierEntity;
 import com.mgl.suppliersservice.models.Contact;
 import com.mgl.suppliersservice.models.Supplier;
-import com.mgl.suppliersservice.models.mappers.ContactsMapper;
-import com.mgl.suppliersservice.models.mappers.SuppliersMapper;
+import com.mgl.suppliersservice.models.Tuple;
+import com.mgl.suppliersservice.models.mappers.ContactsEntityMapper;
+import com.mgl.suppliersservice.models.mappers.SuppliersEntityMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -25,27 +26,27 @@ public class GetSuppliersComponent {
 
     private final ContactsDao contactsDao;
     private final SuppliersDao suppliersDao;
-    private final SuppliersMapper suppliersMapper;
-    private final ContactsMapper contactsMapper;
+    private final SuppliersEntityMapper suppliersEntityMapper;
+    private final ContactsEntityMapper contactsEntityMapper;
 
     /**
      * .
      *
      * @param contactsDao .
      * @param suppliersDao .
-     * @param suppliersMapper .
-     * @param contactsMapper .
+     * @param suppliersEntityMapper .
+     * @param contactsEntityMapper .
      *
      */
     @Autowired
     public GetSuppliersComponent(ContactsDao contactsDao,
                                  SuppliersDao suppliersDao,
-                                 SuppliersMapper suppliersMapper,
-                                 ContactsMapper contactsMapper) {
+                                 SuppliersEntityMapper suppliersEntityMapper,
+                                 ContactsEntityMapper contactsEntityMapper) {
         this.contactsDao = contactsDao;
         this.suppliersDao = suppliersDao;
-        this.suppliersMapper = suppliersMapper;
-        this.contactsMapper = contactsMapper;
+        this.suppliersEntityMapper = suppliersEntityMapper;
+        this.contactsEntityMapper = contactsEntityMapper;
     }
 
     /**
@@ -56,9 +57,13 @@ public class GetSuppliersComponent {
      *
      * @return .
      */
-    public List<Supplier> getSuppliers(int pageSize, int pageNumber) {
+    public Tuple<Integer, List<Supplier>> getSuppliers(int pageSize, int pageNumber) {
         try {
             List<SupplierEntity> supplierEntities = suppliersDao.getSuppliers(pageSize, pageNumber);
+            int suppliersCount = suppliersDao.getSuppliersCount();
+
+            log.info("Found {} Suppliers", suppliersCount);
+
             Map<SupplierEntity, List<ContactEntity>> supplierEntitiesToContacts = supplierEntities.stream()
                 .collect(Collectors.toMap(
                     Function.identity(),
@@ -66,21 +71,26 @@ public class GetSuppliersComponent {
                         return contactsDao.getContactsForSupplier(currentSupplier.getId());
                     }));
 
-            return supplierEntitiesToContacts.entrySet().stream().map(currentEntry -> {
+            List<Supplier> supplierList = supplierEntitiesToContacts.entrySet().stream().map(currentEntry -> {
                 List<Contact> contacts = currentEntry.getValue()
                     .stream()
-                    .map(contactsMapper::fromEntity)
+                    .map(contactsEntityMapper::fromEntity)
                     .collect(Collectors.toList());
 
-                Supplier supplier = suppliersMapper.fromEntity(currentEntry.getKey());
+                Supplier supplier = suppliersEntityMapper.fromEntity(currentEntry.getKey());
 
                 return supplier.toBuilder()
                     .contacts(contacts)
                     .build();
             }).collect(Collectors.toList());
+
+            return Tuple.<Integer, List<Supplier>>builder()
+                .leftValue(suppliersCount)
+                .rightValue(supplierList)
+                .build();
         } catch (Exception e) {
             log.error(e);
-            throw e;
+            throw new RuntimeException(e);
         }
     }
 

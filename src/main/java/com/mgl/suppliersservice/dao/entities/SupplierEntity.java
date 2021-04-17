@@ -1,13 +1,17 @@
 package com.mgl.suppliersservice.dao.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * .
  */
-@Builder
+@Builder(toBuilder = true)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SupplierEntity {
 
     private String id;
