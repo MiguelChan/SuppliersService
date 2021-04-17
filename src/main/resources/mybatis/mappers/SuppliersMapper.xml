@@ -44,4 +44,10 @@
             #{phoneNumber}
         )
     </insert>
+
+    <delete id="deleteSupplier">
+        DELETE FROM suppliersdb.suppliers
+        WHERE
+            id = #{supplierId}
+    </delete>
 </mapper>

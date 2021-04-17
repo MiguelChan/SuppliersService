@@ -36,4 +36,13 @@ public interface SuppliersDao {
      */
     String createSupplier(SupplierEntity supplierEntity) throws Exception;
 
+    /**
+     * Deletes a Supplier from the Persistance Storage.
+     *
+     * @param supplierId The supplierId to delete.
+     *
+     * @throws Exception .
+     */
+    void deleteSupplier(String supplierId) throws Exception;
+
 }

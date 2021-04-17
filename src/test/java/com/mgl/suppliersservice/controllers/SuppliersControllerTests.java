@@ -5,9 +5,11 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import com.mgl.suppliersservice.components.CreateSupplierComponent;
+import com.mgl.suppliersservice.components.DeleteSupplierComponent;
 import com.mgl.suppliersservice.components.GetSuppliersComponent;
 import com.mgl.suppliersservice.dto.CreateSupplierRequest;
 import com.mgl.suppliersservice.dto.CreateSupplierResponse;
+import com.mgl.suppliersservice.dto.DeleteSupplierResponse;
 import com.mgl.suppliersservice.dto.GetSuppliersResponse;
 import com.mgl.suppliersservice.models.Supplier;
 import com.mgl.suppliersservice.models.Tuple;
@@ -30,6 +32,8 @@ public class SuppliersControllerTests {
     private GetSuppliersComponent getSuppliersComponent;
     @Mock
     private CreateSupplierComponent createSupplierComponent;
+    @Mock
+    private DeleteSupplierComponent deleteSupplierComponent;
 
     @InjectMocks
     private SuppliersController suppliersController;
@@ -71,6 +75,17 @@ public class SuppliersControllerTests {
         CreateSupplierResponse response = suppliersController.createSupplier(request);
 
         assertThat(response.getSupplierId()).isEqualTo(expectedSupplierId);
+    }
+
+    @Test
+    public void deleteSupplier_should_deleteSupplier() {
+        String supplierId = "SupplierToDelete";
+
+        when(deleteSupplierComponent.deleteSupplier(supplierId)).thenReturn(true);
+
+        DeleteSupplierResponse response = suppliersController.deleteSupplier(supplierId);
+
+        assertThat(response.isSuccess()).isTrue();
     }
 
 }

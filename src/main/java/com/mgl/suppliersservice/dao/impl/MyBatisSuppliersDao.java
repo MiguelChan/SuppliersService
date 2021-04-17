@@ -60,4 +60,9 @@ public class MyBatisSuppliersDao implements SuppliersDao {
     public int getSuppliersCount() throws Exception {
         return suppliersMapper.getSuppliersCount();
     }
+
+    @Override
+    public void deleteSupplier(String supplierId) throws Exception {
+        suppliersMapper.deleteSupplier(supplierId);
+    }
 }

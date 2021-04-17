@@ -82,4 +82,13 @@ public class MyBatisSuppliersDaoTests {
 
         assertThat(count).isEqualTo(expectedCount);
     }
+
+    @Test
+    public void deleteSupplier_should_deleteTheSupplier() throws Exception {
+        String supplierId = "SupplierId";
+
+        suppliersDao.deleteSupplier(supplierId);
+
+        verify(suppliersMapper).deleteSupplier(supplierId);
+    }
 }
