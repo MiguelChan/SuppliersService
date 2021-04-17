@@ -35,4 +35,12 @@ public interface SuppliersMapper {
      */
     void insertSupplier(SupplierEntity supplierEntity);
 
+    /**
+     * .
+     *
+     * @param supplierId .
+     *
+     */
+    void deleteSupplier(String supplierId);
+
 }

@@ -1,9 +1,11 @@
 package com.mgl.suppliersservice.controllers;
 
 import com.mgl.suppliersservice.components.CreateSupplierComponent;
+import com.mgl.suppliersservice.components.DeleteSupplierComponent;
 import com.mgl.suppliersservice.components.GetSuppliersComponent;
 import com.mgl.suppliersservice.dto.CreateSupplierRequest;
 import com.mgl.suppliersservice.dto.CreateSupplierResponse;
+import com.mgl.suppliersservice.dto.DeleteSupplierResponse;
 import com.mgl.suppliersservice.dto.GetSuppliersResponse;
 import com.mgl.suppliersservice.models.Supplier;
 import com.mgl.suppliersservice.models.Tuple;
@@ -11,7 +13,9 @@ import java.util.List;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +32,7 @@ public class SuppliersController {
 
     private final GetSuppliersComponent getSuppliersComponent;
     private final CreateSupplierComponent createSupplierComponent;
+    private final DeleteSupplierComponent deleteSupplierComponent;
 
     /**
      * .
@@ -37,9 +42,11 @@ public class SuppliersController {
      */
     @Autowired
     public SuppliersController(GetSuppliersComponent getSuppliersComponent,
-                               CreateSupplierComponent createSupplierComponent) {
+                               CreateSupplierComponent createSupplierComponent,
+                               DeleteSupplierComponent deleteSupplierComponent) {
         this.getSuppliersComponent = getSuppliersComponent;
         this.createSupplierComponent = createSupplierComponent;
+        this.deleteSupplierComponent = deleteSupplierComponent;
     }
 
     /**
@@ -79,6 +86,21 @@ public class SuppliersController {
 
         return CreateSupplierResponse.builder()
             .supplierId(supplierId)
+            .build();
+    }
+
+    /**
+     * .
+     *
+     * @param supplierId The id of the supplier to delete.
+     * @return The response.
+     */
+    @DeleteMapping("/suppliers/{supplierId}")
+    public DeleteSupplierResponse deleteSupplier(@PathVariable String supplierId) {
+        boolean isSuccess = deleteSupplierComponent.deleteSupplier(supplierId);
+
+        return DeleteSupplierResponse.builder()
+            .isSuccess(isSuccess)
             .build();
     }
 
