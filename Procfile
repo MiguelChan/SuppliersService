@@ -1,0 +1,1 @@
+web: java -jar ./build/libs/SuppliersService-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
