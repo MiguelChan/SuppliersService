@@ -50,4 +50,16 @@
         WHERE
             id = #{supplierId}
     </delete>
+
+    <select id="getSupplier" resultMap="Supplier">
+        SELECT
+            s.id,
+            s.name,
+            s.address_line_1,
+            s.address_line_2,
+            s.phone_number
+        FROM suppliersdb.suppliers s
+        WHERE
+            s.id = #{supplierId}
+    </select>
 </mapper>

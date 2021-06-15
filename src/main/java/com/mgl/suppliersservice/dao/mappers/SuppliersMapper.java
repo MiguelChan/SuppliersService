@@ -43,4 +43,13 @@ public interface SuppliersMapper {
      */
     void deleteSupplier(String supplierId);
 
+    /**
+     * Gets a supplier by its Id.
+     *
+     * @param supplierId .
+     *
+     * @return .
+     */
+    SupplierEntity getSupplier(String supplierId);
+
 }

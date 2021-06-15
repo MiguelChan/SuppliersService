@@ -1,6 +1,7 @@
 package com.mgl.suppliersservice.dao;
 
 import com.mgl.suppliersservice.dao.entities.SupplierEntity;
+import com.mgl.suppliersservice.models.Supplier;
 import java.util.List;
 
 /**
@@ -44,5 +45,16 @@ public interface SuppliersDao {
      * @throws Exception .
      */
     void deleteSupplier(String supplierId) throws Exception;
+
+    /**
+     * Gets a Supplier by its Id.
+     *
+     * @param supplierId .
+     *
+     * @return .
+     *
+     * @throws Exception .
+     */
+    SupplierEntity getSupplier(String supplierId) throws Exception;
 
 }
