@@ -4,10 +4,11 @@ plugins {
 	id 'java'
 	id 'checkstyle'
     id 'org.flywaydb.flyway' version '7.7.2'
+    id 'jacoco'
 }
 
 group = 'com.mgl'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = '11'
 
 repositories {
@@ -46,6 +47,11 @@ checkstyle {
     maxWarnings = 0
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+    reportsDirectory.set(file("$buildDir/jacoco"))
+}
+
 tasks.register('checkstyle') {
     dependsOn tasks.checkstyleMain
     dependsOn tasks.checkstyleTest
@@ -60,4 +66,24 @@ tasks.register('release') {
 
 test {
 	useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+test.outputs.upToDateWhen { false }
+jacocoTestReport.outputs.upToDateWhen { false }
+
+jacocoTestReport {
+    dependsOn test
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/models/**',
+                    '**/exceptions/**',
+                    '**/dto/**',
+                    '**/dao/entities/**',
+                    '**/spring/**',
+                    '**/suppliersservice/SuppliersServiceApplication*'
+            ])
+        }))
+    }
 }

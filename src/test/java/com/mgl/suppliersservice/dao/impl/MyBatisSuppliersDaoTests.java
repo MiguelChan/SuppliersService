@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -73,6 +74,15 @@ public class MyBatisSuppliersDaoTests {
     }
 
     @Test
+    public void insertSupplier_should_bubbleUpException_when_aFailureOccurs() throws Exception {
+        SupplierEntity supplierEntity = EnhancedRandom.random(SupplierEntity.class);
+
+        doThrow(RuntimeException.class).when(suppliersMapper).insertSupplier(any());
+
+        assertThatThrownBy(() -> suppliersDao.createSupplier(supplierEntity)).isInstanceOfAny(RuntimeException.class);
+    }
+
+    @Test
     public void getSuppliersCount_should_returnTheCount() throws Exception {
         int expectedCount = 100;
 
@@ -90,5 +100,18 @@ public class MyBatisSuppliersDaoTests {
         suppliersDao.deleteSupplier(supplierId);
 
         verify(suppliersMapper).deleteSupplier(supplierId);
+    }
+
+    @Test
+    public void getSupplier_should_returnTheSupplier() throws Exception {
+        String supplierId = "SupplierId";
+
+        SupplierEntity expectedSupplier = EnhancedRandom.random(SupplierEntity.class);
+
+        when(suppliersMapper.getSupplier(supplierId)).thenReturn(expectedSupplier);
+
+        SupplierEntity foundSupplier = suppliersDao.getSupplier(supplierId);
+
+        assertThat(foundSupplier).isEqualTo(expectedSupplier);
     }
 }

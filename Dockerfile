@@ -2,7 +2,7 @@ FROM openjdk:16-jdk-buster
 
 VOLUME /tmp
 
-COPY ./build/libs/SuppliersService-0.0.1-SNAPSHOT.jar app.jar
+COPY ./build/libs/SuppliersService-1.0.0.jar app.jar
 
 EXPOSE 8090
 
