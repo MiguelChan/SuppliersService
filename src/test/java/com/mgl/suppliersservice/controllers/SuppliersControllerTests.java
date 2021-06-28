@@ -6,15 +6,18 @@ import static org.mockito.Mockito.when;
 
 import com.mgl.suppliersservice.components.CreateSupplierComponent;
 import com.mgl.suppliersservice.components.DeleteSupplierComponent;
+import com.mgl.suppliersservice.components.GetSupplierComponent;
 import com.mgl.suppliersservice.components.GetSuppliersComponent;
 import com.mgl.suppliersservice.dto.CreateSupplierRequest;
 import com.mgl.suppliersservice.dto.CreateSupplierResponse;
 import com.mgl.suppliersservice.dto.DeleteSupplierResponse;
+import com.mgl.suppliersservice.dto.GetSupplierResponse;
 import com.mgl.suppliersservice.dto.GetSuppliersResponse;
 import com.mgl.suppliersservice.models.Supplier;
 import com.mgl.suppliersservice.models.Tuple;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,6 +37,8 @@ public class SuppliersControllerTests {
     private CreateSupplierComponent createSupplierComponent;
     @Mock
     private DeleteSupplierComponent deleteSupplierComponent;
+    @Mock
+    private GetSupplierComponent getSupplierComponent;
 
     @InjectMocks
     private SuppliersController suppliersController;
@@ -88,4 +93,28 @@ public class SuppliersControllerTests {
         assertThat(response.isSuccess()).isTrue();
     }
 
+    @Test
+    public void getSupplier_should_returnTheSupplier() {
+        String supplierId = "SupplierToGet";
+        Supplier expectedSupplier = EnhancedRandom.random(Supplier.class);
+
+        when(getSupplierComponent.getSupplier(supplierId)).thenReturn(Optional.of(expectedSupplier));
+
+        GetSupplierResponse response = suppliersController.getSupplier(supplierId);
+
+        assertThat(response.getSupplier()).isNotNull();
+        assertThat(response.getSupplier()).isEqualTo(expectedSupplier);
+    }
+
+    @Test
+    public void getSupplier_should_returnNull_when_nothingCanBeFound() {
+        String supplierId = "SupplierToGet";
+
+        when(getSupplierComponent.getSupplier(supplierId)).thenReturn(Optional.empty());
+
+        GetSupplierResponse response = suppliersController.getSupplier(supplierId);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getSupplier()).isNull();
+    }
 }

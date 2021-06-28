@@ -43,7 +43,7 @@ public class SuppliersEntityMapper {
             .name(supplier.getName())
             .phoneNumber(supplier.getPhoneNumber())
             .addressLine1(supplier.getLineAddress1())
-            .addressLine2(supplier.getLineAddress1())
+            .addressLine2(supplier.getLineAddress2())
             .build();
     }
 

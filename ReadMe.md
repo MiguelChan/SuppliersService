@@ -22,8 +22,7 @@ before deploying the code. In order to do so follow the next steps:
 
 In order to create a `devo` database follow the steps below:
 
-* `docker run --name custom-db -p 5432:5432 -e POSTGRES_PASSWORD=docker -d postgres:12
-  .`: Which will run an empty Database using `PostgreSLQ`, and will expose the port `5432`.
+* `docker run --name custom-db -p 5432:5432 -e POSTGRES_PASSWORD=docker -d postgres:12`: Which will run an empty Database using `PostgreSLQ`, and will expose the port `5432`.
 * Log into your favorite SQL Workbench using `postgres` and `docker` as username and passwords respectively.
 * Run the commands located unser `src/main/resources/db/schema/initial-setup.sql`
 * Finally run: `.gradlew flywayMigrate` so your database is up-to-date.

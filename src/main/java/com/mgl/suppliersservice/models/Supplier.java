@@ -11,11 +11,11 @@ import lombok.Data;
 @Builder(toBuilder = true)
 public class Supplier {
 
-    private final String id;
-    private final String name;
-    private final String phoneNumber;
-    private final String lineAddress1;
-    private final String lineAddress2;
-    private final List<Contact> contacts;
+    private String id;
+    private String name;
+    private String phoneNumber;
+    private String lineAddress1;
+    private String lineAddress2;
+    private List<Contact> contacts;
 
 }

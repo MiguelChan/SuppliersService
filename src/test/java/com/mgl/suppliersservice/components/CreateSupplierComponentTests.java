@@ -1,6 +1,7 @@
 package com.mgl.suppliersservice.components;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -102,5 +103,13 @@ public class CreateSupplierComponentTests {
         verify(contactsDao).insertContacts(Lists.newArrayList());
     }
 
+    @Test
+    public void createSupplier_should_bubbleUpException_when_somethingHappens() {
+        Supplier randomSupplier = EnhancedRandom.random(Supplier.class);
+        when(suppliersEntityMapper.fromModel(any())).thenThrow(RuntimeException.class);
 
+        assertThatThrownBy(() -> {
+            createSupplierComponent.createSupplier(randomSupplier);
+        }).isInstanceOfAny(RuntimeException.class);
+    }
 }
