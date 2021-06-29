@@ -15,7 +15,13 @@
 
     <select id="getContacts" resultMap="Contact">
         SELECT
-            *
+            c.id,
+            c.contact_type,
+            c.phone_number,
+            c.email_address,
+            c.contact_first_name,
+            c.contact_last_name,
+            c.supplier_id
         FROM suppliersdb.contacts AS c
         WHERE
             c.supplier_id = #{supplierId}
@@ -42,4 +48,24 @@
             #{current.supplierId}
         </foreach>
     </insert>
+
+    <select id="getContact" resultMap="Contact">
+        SELECT
+            c.id,
+            c.contact_type,
+            c.phone_number,
+            c.email_address,
+            c.contact_first_name,
+            c.contact_last_name,
+            c.supplier_id
+        FROM suppliersdb.contacts c
+        WHERE
+            c.id = #{contactId}
+    </select>
+
+    <delete id="deleteContact">
+        DELETE FROM suppliersdb.contacts c
+        WHERE
+            c.id = #{contactId}
+    </delete>
 </mapper>

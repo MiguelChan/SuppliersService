@@ -27,4 +27,20 @@ public interface ContactsMapper {
      */
     void insertContacts(List<ContactEntity> contactEntities);
 
+    /**
+     * Deletes a Contact.
+     *
+     * @param contactId .
+     *
+     * @return .
+     */
+    ContactEntity getContact(String contactId);
+
+    /**
+     * Deletes a Contact.
+     *
+     * @param contactId .
+     */
+    void deleteContact(String contactId);
+
 }

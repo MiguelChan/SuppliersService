@@ -5,6 +5,7 @@ import com.mgl.suppliersservice.dao.entities.ContactEntity;
 import com.mgl.suppliersservice.dao.mappers.ContactsMapper;
 import com.mgl.suppliersservice.dao.utils.RandomIdGenerator;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * .
  */
+@Log4j2
 @Component
 public class MyBatisContactsDao implements ContactsDao {
 
@@ -57,5 +59,20 @@ public class MyBatisContactsDao implements ContactsDao {
         });
 
         contactsMapper.insertContacts(contactEntities);
+    }
+
+    @Override
+    public ContactEntity getContact(String contactId) {
+        return contactsMapper.getContact(contactId);
+    }
+
+    @Override
+    public void deleteContact(String contactId) {
+        try {
+            contactsMapper.deleteContact(contactId);
+        } catch (Exception e) {
+            log.error("An error occurred when trying to delete the Contact", e);
+            throw new RuntimeException(e);
+        }
     }
 }

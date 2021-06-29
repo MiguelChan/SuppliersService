@@ -2,8 +2,10 @@ package com.mgl.suppliersservice.dao.impl;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -76,6 +78,35 @@ public class MyBatisContactsDaoTests {
 
         verify(randomIdGenerator).generateRandomId(anyString());
         verify(contactsMapper).insertContacts(anyList());
+    }
+
+    @Test
+    public void getContact_should_getContact() {
+        String contactId = "SomeRandomId";
+        ContactEntity expectedContactEntity = EnhancedRandom.random(ContactEntity.class);
+
+        when(contactsMapper.getContact(contactId)).thenReturn(expectedContactEntity);
+
+        ContactEntity contactEntity = contactsDao.getContact(contactId);
+
+        assertThat(contactEntity).isEqualTo(expectedContactEntity);
+        verify(contactsMapper).getContact(contactId);
+    }
+
+    @Test
+    public void deleteContact_should_deleteContact() {
+        String contactId = "someRandomId";
+
+        contactsDao.deleteContact(contactId);
+
+        verify(contactsMapper).deleteContact(contactId);
+    }
+
+    @Test
+    public void deleteContact_should_bubbleUpException_when_errorOccurs() {
+        doThrow(RuntimeException.class).when(contactsMapper).deleteContact(any());
+
+        assertThatThrownBy(() -> contactsDao.deleteContact("SomeId")).isInstanceOfAny(RuntimeException.class);
     }
 
 }
