@@ -25,4 +25,20 @@ public interface ContactsDao {
      */
     void insertContacts(List<ContactEntity> contactEntities);
 
+    /**
+     * Gets a contact.
+     *
+     * @param contactId .
+     * @return .
+     */
+    ContactEntity getContact(String contactId);
+
+    /**
+     * Deletes a Contact.
+     *
+     * @param contactId .
+     *
+     */
+    void deleteContact(String contactId);
+
 }
