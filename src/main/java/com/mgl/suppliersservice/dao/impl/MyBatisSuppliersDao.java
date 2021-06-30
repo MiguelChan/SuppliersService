@@ -64,6 +64,7 @@ public class MyBatisSuppliersDao implements SuppliersDao {
     @Override
     public void deleteSupplier(String supplierId) throws Exception {
         suppliersMapper.deleteSupplier(supplierId);
+        log.info("Supplier {} deleted", supplierId);
     }
 
     @Override
