@@ -105,10 +105,10 @@ public class SuppliersController {
      */
     @DeleteMapping("/suppliers/{supplierId}")
     public DeleteSupplierResponse deleteSupplier(@PathVariable String supplierId) {
-        boolean isSuccess = deleteSupplierComponent.deleteSupplier(supplierId);
-
+        Optional<Supplier> deletedSupplier = deleteSupplierComponent.deleteSupplier(supplierId);
         return DeleteSupplierResponse.builder()
-            .isSuccess(isSuccess)
+            .deleted(deletedSupplier.isPresent())
+            .supplier(deletedSupplier.orElseGet(() -> null))
             .build();
     }
 

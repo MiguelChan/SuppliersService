@@ -1,5 +1,6 @@
 package com.mgl.suppliersservice.dto;
 
+import com.mgl.suppliersservice.models.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class DeleteSupplierResponse {
 
-    private boolean isSuccess;
-    private String message;
+    private boolean deleted;
+    private Supplier supplier;
 
 }

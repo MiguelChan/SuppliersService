@@ -72,6 +72,16 @@ test {
 test.outputs.upToDateWhen { false }
 jacocoTestReport.outputs.upToDateWhen { false }
 
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.9
+            }
+        }
+    }
+}
+
 jacocoTestReport {
     dependsOn test
     afterEvaluate {

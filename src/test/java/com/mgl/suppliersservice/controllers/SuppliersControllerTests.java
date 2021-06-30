@@ -85,12 +85,27 @@ public class SuppliersControllerTests {
     @Test
     public void deleteSupplier_should_deleteSupplier() {
         String supplierId = "SupplierToDelete";
+        Supplier expectedSupplier = EnhancedRandom.random(Supplier.class);
 
-        when(deleteSupplierComponent.deleteSupplier(supplierId)).thenReturn(true);
+        when(deleteSupplierComponent.deleteSupplier(supplierId)).thenReturn(Optional.of(expectedSupplier));
 
         DeleteSupplierResponse response = suppliersController.deleteSupplier(supplierId);
 
-        assertThat(response.isSuccess()).isTrue();
+        assertThat(response.isDeleted()).isTrue();
+        assertThat(response.getSupplier()).isNotNull();
+        assertThat(response.getSupplier()).isEqualTo(expectedSupplier);
+    }
+
+    @Test
+    public void deletedSupplier_should_returnEmptyResponse_when_nothingHappens() {
+        String supplierId = "SomeRandomSupplier";
+        when(deleteSupplierComponent.deleteSupplier(supplierId)).thenReturn(Optional.empty());
+
+        DeleteSupplierResponse response = suppliersController.deleteSupplier(supplierId);
+
+        assertThat(response).isNotNull();
+        assertThat(response.isDeleted()).isFalse();
+        assertThat(response.getSupplier()).isNull();;
     }
 
     @Test
