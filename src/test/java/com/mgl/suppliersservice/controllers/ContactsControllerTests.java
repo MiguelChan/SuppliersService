@@ -1,18 +1,18 @@
 package com.mgl.suppliersservice.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.mgl.suppliersservice.components.DeleteContactComponent;
-import com.mgl.suppliersservice.dao.ContactsDao;
-import com.mgl.suppliersservice.dao.entities.ContactEntity;
+import com.mgl.suppliersservice.components.EditContactComponent;
+import com.mgl.suppliersservice.components.GetContactComponent;
+import com.mgl.suppliersservice.components.GetContactsForSupplierComponent;
 import com.mgl.suppliersservice.dto.DeleteContactResponse;
+import com.mgl.suppliersservice.dto.EditContactRequest;
+import com.mgl.suppliersservice.dto.EditContactResponse;
+import com.mgl.suppliersservice.dto.GetContactResponse;
+import com.mgl.suppliersservice.dto.GetContactsForSupplierResponse;
 import com.mgl.suppliersservice.models.Contact;
-import com.mgl.suppliersservice.models.mappers.ContactsEntityMapper;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import java.util.List;
 import java.util.Optional;
@@ -28,47 +28,41 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class ContactsControllerTests {
 
-    private static final String TEST_SUPPLIER_ID = "SomeRandomSupplierId";
-
     @Mock
-    private ContactsDao contactsDao;
-    @Mock
-    private ContactsEntityMapper contactsEntityMapper;
+    private GetContactsForSupplierComponent getContactsForSupplierComponent;
     @Mock
     private DeleteContactComponent deleteContactComponent;
+    @Mock
+    private EditContactComponent editContactComponent;
+    @Mock
+    private GetContactComponent getContactComponent;
 
     private ContactsController contactsController;
 
+    /**
+     * .
+     */
     @BeforeEach
     public void setup() {
-        contactsController = new ContactsController(contactsDao, contactsEntityMapper, deleteContactComponent);
+        contactsController = new ContactsController(
+            getContactsForSupplierComponent,
+            deleteContactComponent,
+            editContactComponent,
+            getContactComponent
+        );
     }
 
     @Test
     public void getContacts_should_returnTheContacts_when_theyAreAvailable() {
-        List<ContactEntity> dbContacts = EnhancedRandom.randomListOf(5, ContactEntity.class);
+        String supplierId = "SomeSupplierId";
+        List<Contact> expectedContacts = EnhancedRandom.randomListOf(5, Contact.class);
 
-        when(contactsDao.getContactsForSupplier(TEST_SUPPLIER_ID)).thenReturn(dbContacts);
-        when(contactsEntityMapper.fromEntity(any())).thenReturn(any());
+        when(getContactsForSupplierComponent.getContactsForSupplier(supplierId)).thenReturn(expectedContacts);
 
-        List<Contact> contacts = contactsController.getContacts(TEST_SUPPLIER_ID);
+        GetContactsForSupplierResponse response = contactsController.getContacts(supplierId);
 
-        assertThat(contacts.size()).isEqualTo(dbContacts.size());
-        verify(contactsDao).getContactsForSupplier(TEST_SUPPLIER_ID);
-
-        dbContacts.forEach(currentContact -> {
-            verify(contactsEntityMapper).fromEntity(currentContact);
-        });
-    }
-
-    @Test
-    public void getContacts_should_bubbleUpExceptionFromDao() {
-        when(contactsDao.getContactsForSupplier(TEST_SUPPLIER_ID)).thenThrow(RuntimeException.class);
-
-        assertThatThrownBy(() -> contactsController.getContacts(TEST_SUPPLIER_ID)).isInstanceOfAny(RuntimeException.class);
-
-        verify(contactsDao).getContactsForSupplier((TEST_SUPPLIER_ID));
-        verifyNoInteractions(contactsEntityMapper);
+        assertThat(response).isNotNull();
+        assertThat(response.getContacts()).isEqualTo(expectedContacts);
     }
 
     @Test
@@ -94,4 +88,47 @@ public class ContactsControllerTests {
         assertThat(response.getContact()).isNull();
     }
 
+    @Test
+    public void editContact_should_editContact() {
+        String contactId = "SomeId";
+        Contact contact = EnhancedRandom.random(Contact.class);
+
+        EditContactResponse expectedResponse = EnhancedRandom.random(EditContactResponse.class);
+
+
+        when(editContactComponent.editContact(contact)).thenReturn(expectedResponse);
+
+        EditContactRequest request = EditContactRequest.builder()
+            .contact(contact)
+            .build();
+
+        EditContactResponse response = contactsController.editContact(contactId, request);
+
+        assertThat(response).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    public void getContact_should_returnTheContact() {
+        String contactId = "SomeRandomId";
+        Contact expectedContact = EnhancedRandom.random(Contact.class);
+
+        when(getContactComponent.getContact(contactId)).thenReturn(Optional.of(expectedContact));
+
+        GetContactResponse response = contactsController.getContact(contactId);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getContact()).isEqualTo(expectedContact);
+    }
+
+    @Test
+    public void getContact_should_returnEmptyResponse_when_nothingCanBeFound() {
+        String contactId = "SomeRandomId";
+
+        when(getContactComponent.getContact(contactId)).thenReturn(Optional.empty());
+
+        GetContactResponse response = contactsController.getContact(contactId);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getContact()).isNull();
+    }
 }

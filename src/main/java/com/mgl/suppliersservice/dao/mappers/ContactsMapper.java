@@ -43,4 +43,11 @@ public interface ContactsMapper {
      */
     void deleteContact(String contactId);
 
+    /**
+     * Updates a Contact.
+     *
+     * @param contact .
+     */
+    void updateContact(ContactEntity contact);
+
 }

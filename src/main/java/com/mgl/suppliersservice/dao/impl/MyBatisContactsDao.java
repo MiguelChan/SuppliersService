@@ -75,4 +75,15 @@ public class MyBatisContactsDao implements ContactsDao {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void editContact(ContactEntity contactEntity) {
+        log.debug("Attempting to Update Contact: {}", contactEntity.getId());
+        try {
+            contactsMapper.updateContact(contactEntity);
+        } catch (Exception e) {
+            log.error("An error occured while trying to edit the Contact", e);
+            throw new RuntimeException(e);
+        }
+    }
 }
