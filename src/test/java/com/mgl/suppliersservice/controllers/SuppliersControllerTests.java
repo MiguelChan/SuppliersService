@@ -6,11 +6,14 @@ import static org.mockito.Mockito.when;
 
 import com.mgl.suppliersservice.components.CreateSupplierComponent;
 import com.mgl.suppliersservice.components.DeleteSupplierComponent;
+import com.mgl.suppliersservice.components.EditSupplierComponent;
 import com.mgl.suppliersservice.components.GetSupplierComponent;
 import com.mgl.suppliersservice.components.GetSuppliersComponent;
 import com.mgl.suppliersservice.dto.CreateSupplierRequest;
 import com.mgl.suppliersservice.dto.CreateSupplierResponse;
 import com.mgl.suppliersservice.dto.DeleteSupplierResponse;
+import com.mgl.suppliersservice.dto.EditSupplierRequest;
+import com.mgl.suppliersservice.dto.EditSupplierResponse;
 import com.mgl.suppliersservice.dto.GetSupplierResponse;
 import com.mgl.suppliersservice.dto.GetSuppliersResponse;
 import com.mgl.suppliersservice.models.Supplier;
@@ -39,6 +42,8 @@ public class SuppliersControllerTests {
     private DeleteSupplierComponent deleteSupplierComponent;
     @Mock
     private GetSupplierComponent getSupplierComponent;
+    @Mock
+    private EditSupplierComponent editSupplierComponent;
 
     @InjectMocks
     private SuppliersController suppliersController;
@@ -131,5 +136,22 @@ public class SuppliersControllerTests {
 
         assertThat(response).isNotNull();
         assertThat(response.getSupplier()).isNull();
+    }
+
+    @Test
+    public void editSupplier_should_editSupplier() {
+        String supplierId = "someId";
+        Supplier supplier = EnhancedRandom.random(Supplier.class);
+
+        EditSupplierResponse expectedResponse = EnhancedRandom.random(EditSupplierResponse.class);
+        EditSupplierRequest request = EditSupplierRequest.builder()
+            .supplier(supplier)
+            .build();
+
+        when(editSupplierComponent.editSupplier(supplier)).thenReturn(expectedResponse);
+
+        EditSupplierResponse response = suppliersController.editSupplier(supplierId, request);
+
+        assertThat(response).isEqualTo(expectedResponse);
     }
 }

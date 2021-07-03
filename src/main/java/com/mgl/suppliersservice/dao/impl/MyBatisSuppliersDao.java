@@ -71,4 +71,15 @@ public class MyBatisSuppliersDao implements SuppliersDao {
     public SupplierEntity getSupplier(String supplierId) throws Exception {
         return suppliersMapper.getSupplier(supplierId);
     }
+
+    @Override
+    public void editSupplier(SupplierEntity supplierEntity) throws Exception {
+        log.info("Attempting to Update Supplier: {}", supplierEntity);
+        try {
+            suppliersMapper.updateSupplier(supplierEntity);
+        } catch (Exception e) {
+            log.error("There was an error while trying to Update the Supplier", e);
+            throw new RuntimeException(e);
+        }
+    }
 }

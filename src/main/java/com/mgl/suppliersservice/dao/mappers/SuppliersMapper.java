@@ -52,4 +52,11 @@ public interface SuppliersMapper {
      */
     SupplierEntity getSupplier(String supplierId);
 
+    /**
+     * .
+     *
+     * @param supplierEntity .
+     */
+    void updateSupplier(SupplierEntity supplierEntity);
+
 }

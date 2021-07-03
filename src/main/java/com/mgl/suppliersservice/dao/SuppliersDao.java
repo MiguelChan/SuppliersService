@@ -57,4 +57,13 @@ public interface SuppliersDao {
      */
     SupplierEntity getSupplier(String supplierId) throws Exception;
 
+    /**
+     * Edits a Supplier.
+     *
+     * @param supplierEntity .
+     *
+     * @throws Exception .
+     */
+    void editSupplier(SupplierEntity supplierEntity) throws Exception;
+
 }
