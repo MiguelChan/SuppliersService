@@ -14,6 +14,7 @@ import com.mgl.suppliersservice.dao.mappers.SuppliersMapper;
 import com.mgl.suppliersservice.dao.utils.RandomIdGenerator;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import java.util.List;
+import net.bytebuddy.build.ToStringPlugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -113,5 +114,22 @@ public class MyBatisSuppliersDaoTests {
         SupplierEntity foundSupplier = suppliersDao.getSupplier(supplierId);
 
         assertThat(foundSupplier).isEqualTo(expectedSupplier);
+    }
+
+    @Test
+    public void editSupplier_should_editSupplier() throws Exception {
+        SupplierEntity supplierEntity = EnhancedRandom.random(SupplierEntity.class);
+
+        suppliersDao.editSupplier(supplierEntity);
+
+        verify(suppliersMapper).updateSupplier(supplierEntity);
+    }
+
+    @Test
+    public void editSupplier_should_bubbleUpException_when_errorOccurs() throws Exception {
+        SupplierEntity supplierEntity = EnhancedRandom.random(SupplierEntity.class);
+        doThrow(RuntimeException.class).when(suppliersMapper).updateSupplier(supplierEntity);
+
+        assertThatThrownBy(() -> suppliersDao.editSupplier(supplierEntity)).isInstanceOfAny(RuntimeException.class);
     }
 }

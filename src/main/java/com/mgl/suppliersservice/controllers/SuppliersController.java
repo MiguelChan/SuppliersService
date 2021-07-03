@@ -2,11 +2,14 @@ package com.mgl.suppliersservice.controllers;
 
 import com.mgl.suppliersservice.components.CreateSupplierComponent;
 import com.mgl.suppliersservice.components.DeleteSupplierComponent;
+import com.mgl.suppliersservice.components.EditSupplierComponent;
 import com.mgl.suppliersservice.components.GetSupplierComponent;
 import com.mgl.suppliersservice.components.GetSuppliersComponent;
 import com.mgl.suppliersservice.dto.CreateSupplierRequest;
 import com.mgl.suppliersservice.dto.CreateSupplierResponse;
 import com.mgl.suppliersservice.dto.DeleteSupplierResponse;
+import com.mgl.suppliersservice.dto.EditSupplierRequest;
+import com.mgl.suppliersservice.dto.EditSupplierResponse;
 import com.mgl.suppliersservice.dto.GetSupplierResponse;
 import com.mgl.suppliersservice.dto.GetSuppliersResponse;
 import com.mgl.suppliersservice.models.Supplier;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +41,7 @@ public class SuppliersController {
     private final CreateSupplierComponent createSupplierComponent;
     private final DeleteSupplierComponent deleteSupplierComponent;
     private final GetSupplierComponent getSupplierComponent;
+    private final EditSupplierComponent editSupplierComponent;
 
     /**
      * .
@@ -45,16 +50,19 @@ public class SuppliersController {
      * @param createSupplierComponent .
      * @param deleteSupplierComponent .
      * @param getSupplierComponent .
+     * @param editSupplierComponent .
      */
     @Autowired
     public SuppliersController(GetSuppliersComponent getSuppliersComponent,
                                CreateSupplierComponent createSupplierComponent,
                                DeleteSupplierComponent deleteSupplierComponent,
-                               GetSupplierComponent getSupplierComponent) {
+                               GetSupplierComponent getSupplierComponent,
+                               EditSupplierComponent editSupplierComponent) {
         this.getSuppliersComponent = getSuppliersComponent;
         this.createSupplierComponent = createSupplierComponent;
         this.deleteSupplierComponent = deleteSupplierComponent;
         this.getSupplierComponent = getSupplierComponent;
+        this.editSupplierComponent = editSupplierComponent;
     }
 
     /**
@@ -126,6 +134,13 @@ public class SuppliersController {
         return GetSupplierResponse.builder()
             .supplier(foundSupplier.orElseGet(() -> null))
             .build();
+    }
+
+    @PutMapping("/suppliers/{supplierId}")
+    public EditSupplierResponse editSupplier(@PathVariable String supplierId,
+                                             @RequestBody EditSupplierRequest request) {
+        Supplier supplier = request.getSupplier();
+        return editSupplierComponent.editSupplier(supplier);
     }
 
 }

@@ -62,4 +62,15 @@
         WHERE
             s.id = #{supplierId}
     </select>
+
+    <update id="updateSupplier" parameterType="com.mgl.suppliersservice.dao.entities.SupplierEntity">
+        UPDATE suppliersdb.suppliers
+        SET
+            name = #{name},
+            address_line_1 = #{addressLine1},
+            address_line_2 = #{addressLine2},
+            phone_number = #{phoneNumber}
+        WHERE
+            id = #{id}
+    </update>
 </mapper>
