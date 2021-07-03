@@ -68,4 +68,16 @@
         WHERE
             c.id = #{contactId}
     </delete>
+
+    <update id="updateContact" parameterType="com.mgl.suppliersservice.dao.entities.ContactEntity">
+        UPDATE suppliersdb.contacts
+        SET
+            contact_type = #{contactType},
+            phone_number = #{phoneNumber},
+            email_address = #{emailAddress},
+            contact_first_name = #{contactFirstName},
+            contact_last_name = #{contactLastName}
+        WHERE
+            id = #{id}
+    </update>
 </mapper>

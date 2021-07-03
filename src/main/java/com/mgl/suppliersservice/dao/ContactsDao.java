@@ -41,4 +41,11 @@ public interface ContactsDao {
      */
     void deleteContact(String contactId);
 
+    /**
+     * Edits a Contact.
+     *
+     * @param contactEntity .
+     */
+    void editContact(ContactEntity contactEntity);
+
 }

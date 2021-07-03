@@ -109,4 +109,21 @@ public class MyBatisContactsDaoTests {
         assertThatThrownBy(() -> contactsDao.deleteContact("SomeId")).isInstanceOfAny(RuntimeException.class);
     }
 
+    @Test
+    public void editContact_should_editTheContact() {
+        ContactEntity contactEntity = EnhancedRandom.random(ContactEntity.class);
+
+        contactsDao.editContact(contactEntity);
+
+        verify(contactsMapper).updateContact(contactEntity);
+    }
+
+    @Test
+    public void editContact_should_bubbleUpExceptions_when_errorOccurs() {
+        ContactEntity contactEntity = EnhancedRandom.random(ContactEntity.class);
+        doThrow(RuntimeException.class).when(contactsMapper).updateContact(contactEntity);
+
+        assertThatThrownBy(() -> contactsDao.editContact(contactEntity)).isInstanceOfAny(RuntimeException.class);
+    }
+
 }
